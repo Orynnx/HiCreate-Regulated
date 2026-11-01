@@ -1,0 +1,34 @@
+[versions]
+agp = "9.1.0"
+kotlin = "2.4.10"
+composeBom = "2024.12.01"
+activityCompose = "1.13.0"
+activity = "1.13.0"
+lifecycle = "2.9.4"
+libxposed = "102.0.0"
+miuix = "0.8.8"
+glasmio = "0.1.0"
+junit = "4.13.2"
+
+[libraries]
+libxposed-api = { module = "io.github.libxposed:api", version.ref = "libxposed" }
+libxposed-service = { module = "io.github.libxposed:service", version.ref = "libxposed" }
+compose-bom = { module = "androidx.compose:compose-bom", version.ref = "composeBom" }
+compose-ui = { module = "androidx.compose.ui:ui" }
+compose-ui-tooling = { module = "androidx.compose.ui:ui-tooling" }
+compose-ui-tooling-preview = { module = "androidx.compose.ui:ui-tooling-preview" }
+compose-material3 = { module = "androidx.compose.material3:material3" }
+compose-icons = { module = "androidx.compose.material:material-icons-core" }
+activity-compose = { module = "androidx.activity:activity-compose", version.ref = "activityCompose" }
+activity-ktx = { module = "androidx.activity:activity-ktx", version.ref = "activity" }
+lifecycle-viewmodel-compose = { module = "androidx.lifecycle:lifecycle-viewmodel-compose", version.ref = "lifecycle" }
+lifecycle-viewmodel-ktx = { module = "androidx.lifecycle:lifecycle-viewmodel-ktx", version.ref = "lifecycle" }
+miuix = { module = "top.yukonga.miuix.kmp:miuix-android", version.ref = "miuix" }
+glasmio-ui = { module = "io.github.neoruaa.glasmio:glasmio-ui", version.ref = "glasmio" }
+glasmio-preference = { module = "io.github.neoruaa.glasmio:glasmio-preference", version.ref = "glasmio" }
+junit = { module = "junit:junit", version.ref = "junit" }
+
+[plugins]
+android-application = { id = "com.android.application", version.ref = "agp" }
+kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
+kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }

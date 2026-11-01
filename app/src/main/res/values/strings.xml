@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">天生会画 兼容模块</string>
+    <string name="app_description">帮助原版天生会画在非华为设备上启动与运行</string>
+</resources>

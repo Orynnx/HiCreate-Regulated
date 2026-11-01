@@ -1,0 +1,22 @@
+HiCreate Regulated
+Copyright 2026 HiCreate Regulated contributors
+
+This is an independent, unofficial compatibility module for the Android
+application com.huawei.hicreate. It is not affiliated with, endorsed by, or
+sponsored by Huawei.
+
+The original source code authored for this project is licensed under the
+Apache License, Version 2.0. See LICENSE.
+
+Third-party components and their licenses are listed in
+docs/THIRD_PARTY.md and THIRD_PARTY_NOTICES.md.
+
+The Huawei runtime payload files (hwext-res.apk, hwframework-full.jar,
+hwframework.dex, hwemui.dex and featurelayer-widget.dex) are not part of this
+source repository and are not licensed under the Apache License. A binary
+release built with them includes those files; redistribution of that binary is
+subject to the rights and terms applicable to those Huawei files.
+
+Huawei framework interface stubs and native patch data in this repository are
+provided solely for interoperability research and remain subject to any
+applicable third-party rights.
