@@ -1,6 +1,6 @@
 # HiCreate Regulated
 
-##如果您使用中有任何问题，您都可以联系我，我很乐意和您交流并与您一同解决这些问题。
+## 如果您使用中有任何问题，您都可以联系我，我很乐意和您交流并与您一同解决这些问题。
 ##If you have any issue or question with this project, please don't hesitate to let me know.
 
 此模块在Galaxy Tab S8+，One UI8.0经过测试。
