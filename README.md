@@ -1,145 +1,138 @@
-# 天生会画 / Huawei GoPaint 非华为兼容模块 · HiCreate Regulated
+![HiCreate Regulated — GoPaint on more Android devices](docs/images/cover.jpg)
 
-简体中文 | [English](README.en.md)
+<h1 align="center">天生会画 / GoPaint 非华为兼容模块</h1>
+<p align="center">让更多 Android 设备用上天生会画。</p>
 
-**HiCreate Regulated** 是原版「天生会画」（Huawei GoPaint / HiCreate）的独立
-LSPosed 兼容模块，用于非华为 Android 设备上的兼容适配，目标应用包名为
-`com.huawei.hicreate`。
+<p align="center">
+  <a href="https://github.com/Orynnx/HiCreate-Regulated/releases/latest"><img src="docs/images/download-zh.svg" width="224" height="48" alt="下载模块 APK" /></a>
+</p>
+<p align="center">
+  <a href="docs/INSTALL.md">安装指南</a> ·
+  <a href="docs/COMPATIBILITY.md">兼容性与测试</a> ·
+  <a href="https://github.com/Orynnx/HiCreate-Regulated/issues/new/choose">反馈问题</a> ·
+  <a href="README.en.md">English</a>
+</p>
 
-LSPosed compatibility module for Huawei GoPaint (天生会画 / HiCreate) on
-non-Huawei Android devices. Requires root and LSPosed API 102; supports the
-stock `com.huawei.hicreate` `12.4.2.330` APK.
+<p align="center">
+  <img src="https://img.shields.io/badge/Android-12%2B-2d6a4f?style=flat-square" alt="Android 12+" />
+  <img src="https://img.shields.io/badge/LSPosed-API%20102-3755a6?style=flat-square" alt="LSPosed API 102" />
+  <img src="https://img.shields.io/badge/License-Apache%202.0-a64b2a?style=flat-square" alt="Apache-2.0 source license" />
+</p>
 
-**[下载模块 APK](https://github.com/Orynnx/HiCreate-Regulated/releases/latest)**
-· [安装方法](#安装)
-· [兼容性](#兼容性)
-· [问题反馈](https://github.com/Orynnx/HiCreate-Regulated/issues)
+HiCreate Regulated 为原版 **天生会画（Huawei GoPaint / HiCreate）** 提供非华为
+Android 设备上的运行时兼容适配。安装独立 LSPosed 模块，保留原版应用 APK。
 
-**版本：** `1.0.0-alpha-release`
+> **开始前**：需要 Root、LSPosed API 102 和 Zygisk/同等注入环境；
+> 目标应用须为原版 `com.huawei.hicreate` **12.4.2.330**。
+> 当前模块版本为 **1.0.0-alpha-release**，已记录测试环境与待验证范围见[兼容性表](docs/COMPATIBILITY.md)。
 
-> 需要 root、LSPosed API 102 和 Zygisk/同等注入环境，不是免 root 方案。  
-> 只支持原版 `com.huawei.hicreate` `12.4.2.330`；不修改、不重签目标 APK。
+## 它带来什么
 
-## 兼容性
+- **启动兼容** — 处理非华为设备上的启动、设备检查、资源与控件问题。
+- **绘画与作品操作** — 为笔刷、会话、文件选择器和分享提供兼容处理。
+- **轻量管理** — 启用后自动应用兼容适配；状态页查看应用版本，并切换 Miuix / Apple 外观。
 
-| 项目 | 要求 |
-|---|---|
-| 目标应用 | `com.huawei.hicreate` `12.4.2.330`，原版 APK |
-| 已测试设备 | 三星 Samsung Galaxy Tab S8+，One UI 8.0 |
-| 注入环境 | LSPosed API 102（如 Vector 2.x），需要 root |
-| Android | 12+；Apple 风格页面需要 13+ |
-| Android 17 | 尚未完成兼容验证；状态页会提示 |
-| 模块设置 | 仅「使用 Apple 风格」外观开关 |
-| 日志 | 不写日志，不生成报告 |
+具体实现见 [Hook 清单](docs/HOOKS.md)；设备测试情况见[兼容性与测试](docs/COMPATIBILITY.md)。
 
-其他版本或已重打包的目标 APK 不支持。以上设备与系统为当前记录的测试环境，
-其他机型的兼容性仍需实际验证。
+## 界面一览
 
-## 功能
+<table>
+  <tr>
+    <th width="50%">Miuix</th>
+    <th width="50%">Apple 风格 · Android 13+</th>
+  </tr>
+  <tr>
+    <td><img src="docs/images/status-miuix.png" alt="Miuix 深色状态页，显示版本和作用域要求" width="100%" /></td>
+    <td><img src="docs/images/status-apple.png" alt="Glasmio 浅色状态页，显示版本和作用域要求" width="100%" /></td>
+  </tr>
+</table>
 
-- 修复非华为设备上的启动、设备检查、权限、资源和控件兼容；
-- 修复笔刷、会话、文件选择器、分享和网络/商店兼容；
-- 在应用私有目录校验并补丁 `libnativelib.so`，不修改 APK；
-- 在 HMS 进程处理包信息与签名兼容。
+状态页跟随系统深浅色；外观开关只影响模块页面。版本自检会在返回页面时刷新。
 
-Hook 明细见 [docs/HOOKS.md](docs/HOOKS.md)。
+<details>
+<summary>查看天生会画首页运行截图</summary>
+
+![启用模块后的天生会画首页，包含教程作品](docs/images/target-home.png)
+
+仓库现有运行截图展示的是应用首页；具体绘画、作品操作与设备测试范围见[兼容性记录](docs/COMPATIBILITY.md)。
+
+</details>
 
 ## 安装
 
-1. 安装原版天生会画 `12.4.2.330`，并准备好支持 API 102 的 LSPosed 环境；
-2. 从 [Release 下载页](https://github.com/Orynnx/HiCreate-Regulated/releases/latest)
-   下载并安装 `HiCreate-Regulated-*.apk`（模块 APK 内含运行所需华为载荷）；
-3. 在 LSPosed 中启用模块；
-4. 作用域勾选 `com.huawei.hicreate`；有 HMS Core 时再勾选 `com.huawei.hwid`；
-5. 强制停止并重新打开天生会画。
+1. **准备环境** — 安装原版天生会画 `12.4.2.330`，确认 Root 与支持 API 102 的 LSPosed 已就绪。
+2. **安装模块** — 从 [Releases](https://github.com/Orynnx/HiCreate-Regulated/releases/latest) 下载并安装 `HiCreate-Regulated-*.apk`。
+3. **启用并打开** — 在 LSPosed 启用模块、勾选 `com.huawei.hicreate`；安装了 HMS Core 时再勾选 `com.huawei.hwid`。强制停止天生会画后重新打开。
 
-下载页中的 APK 是兼容模块，天生会画本体需要另行安装。
+**[完整安装步骤与故障排查 →](docs/INSTALL.md)**
 
-作用域中的“需勾选 / 按需勾选”是要求清单，不是实时状态；模块无法读取
-LSPosed 的勾选配置。
+下载的是兼容模块，天生会画本体需要另行安装。状态页的“需勾选”是设置要求，
+模块无法读取 LSPosed 的作用域配置，也不能用该页面确认 Hook 已生效。
 
-## 使用
+## 兼容性
 
-1. 打开「天生会画 兼容模块」状态页。
-2. 查看「自检」：模块版本、目标应用版本、HMS Core 是否安装。
-3. 按需开启「使用 Apple 风格」，只改变状态页外观，不影响 Hook。
-4. 打开天生会画；首次启动和首次进入画布可能稍慢。
-5. Android 17 上会弹出兼容性提示，确认后继续使用。
+| 范围 | 当前记录 |
+|---|---|
+| 已测试设备 | 三星 Samsung Galaxy Tab S8+ / One UI 8.0 |
+| 目标应用 | 原版 `com.huawei.hicreate` `12.4.2.330` |
+| Android | 最低 Android 12；Apple 外观最低 Android 13 |
+| 其他非华为设备 | 欢迎[提交实测结果](https://github.com/Orynnx/HiCreate-Regulated/issues/new?template=compatibility.yml)，需按机型验证 |
+| Android 17 | 尚未完成兼容验证，状态页会提示 |
 
-状态页跟随系统深浅色；每次返回页面都会重新自检。
-
-## 界面
-
-Miuix 默认外观：
-
-![天生会画兼容模块的 Miuix 状态页](docs/images/status-miuix.png)
-
-Apple 风格（Glasmio，Android 13+）：
-
-![天生会画兼容模块的 Apple 风格状态页](docs/images/status-apple.png)
-
-模块启用后，天生会画可以正常进入主界面：
-
-![启用 HiCreate Regulated 后的天生会画 GoPaint 主界面](docs/images/target-home.png)
-
-## 外观
-
-「使用 Apple 风格」只切换状态页外观：
-
-- 关闭：Miuix；
-- 开启：Glasmio（Android 13+）；
-- Android 12 自动保持 Miuix。
+[查看验证边界与功能测试清单 →](docs/COMPATIBILITY.md)
 
 ## 常见问题
 
-### 非华为设备可以使用天生会画（GoPaint）吗？
+<details>
+<summary>可以免 Root 使用吗？</summary>
 
-本模块用于原版天生会画在非华为 Android 设备上的兼容适配，需要满足上方的
-应用版本、Android 版本和 LSPosed 要求。已测试设备见[兼容性](#兼容性)；
-其他机型仍需验证，不能据此认为所有设备都兼容。
+需要 Root、支持 API 102 的 LSPosed 和 Zygisk/同等注入环境。
 
-### 天生会画兼容模块可以免 Root 使用吗？
+</details>
 
-不可以。需要 root、支持 API 102 的 LSPosed 和 Zygisk/同等注入环境。
+<details>
+<summary>支持其他版本或修改版天生会画吗？</summary>
 
-### 下载的是天生会画本体或修改版 APK 吗？
+当前只支持原版 `12.4.2.330`。其他版本和重打包 APK 不属于支持范围。
+模块不修改、不重签目标 APK，原生兼容处理发生在应用私有目录中的副本上。
 
-下载的是独立 LSPosed 模块。请另行安装原版天生会画 `12.4.2.330`；
-模块不修改、不重签目标 APK。
+</details>
 
-### 安装与使用问题
+<details>
+<summary>为什么显示“需勾选”或“目标应用未安装”？</summary>
 
-- **目标应用显示未安装**：确认已安装目标应用，并在 LSPosed 中勾选作用域。
-- **作用域显示需勾选**：这是要求清单，不是未勾选状态。
-- **Apple 风格无法开启**：Android 12 不支持，自动回退 Miuix。
-- **Android 17 弹窗**：表示模块尚未完成该版本的兼容验证；当前仍可尝试使用。
-- **新版本安装失败**：旧版可能是 debug 签名，卸载旧版后重装，并重新启用作用域。
+“需勾选”是作用域要求，请在 LSPosed 中确认设置。显示未安装时，请确认模块与
+天生会画安装在同一 Android 用户或工作资料中。详细步骤见[安装指南](docs/INSTALL.md)。
 
-## 反馈与交流
+</details>
 
-如果您使用中有任何问题，您都可以通过
-[GitHub Issues](https://github.com/Orynnx/HiCreate-Regulated/issues) 联系我，
-我很乐意和您交流并与您一同解决这些问题。反馈时请附上设备型号、Android 版本、
-LSPosed 版本、天生会画版本及复现步骤。
+<details>
+<summary>新版本模块安装失败怎么办？</summary>
 
-## 构建
+若提示签名冲突，旧模块可能使用了 debug 签名。卸载旧的兼容模块后安装 Release，
+再在 LSPosed 中启用并设置作用域。无需为此卸载天生会画本体。
+先依据系统安装提示判断原因，其他问题可[提交反馈](https://github.com/Orynnx/HiCreate-Regulated/issues/new?template=bug_report.yml)。
 
-要求 JDK 21、Android SDK 37、Gradle wrapper。华为运行时资产不随仓库提供：
+</details>
 
-```powershell
-.\gradlew.bat :app:assembleRelease "-PassetsDir=C:\path\to\assets"
-```
+## 一起完善适配
 
-release 缺少资产会直接失败。签名、`local-assets/` 和构建细节见
-[docs/BUILD.md](docs/BUILD.md)。
+如果您使用中有任何问题，欢迎交流。无论是问题反馈、其他设备的实测结果，
+还是安装说明与翻译的改进，都能帮助这个项目变得更好。
 
-源码仓库不包含华为资产、预编译 APK、keystore 或签名凭据。Release APK
-由本地资产构建，内含华为运行时载荷；其再分发范围由使用者自行确认。
+**[反馈问题](https://github.com/Orynnx/HiCreate-Regulated/issues/new?template=bug_report.yml)** ·
+**[报告设备兼容性](https://github.com/Orynnx/HiCreate-Regulated/issues/new?template=compatibility.yml)** ·
+**[参与贡献](CONTRIBUTING.md)**
+
+## 开发文档
+
+[构建](docs/BUILD.md) · [架构](docs/ARCHITECTURE.md) ·
+[Hook 清单](docs/HOOKS.md) · [原生兼容](docs/NATIVE.md) · [第三方说明](docs/THIRD_PARTY.md)
 
 ## 许可证
 
-自有源码使用 [Apache-2.0](LICENSE)。`NOTICE` 是归属与范围声明，不是许可证；
-它说明华为运行时资产和派生兼容数据不在 Apache-2.0 范围内。第三方许可见
-[THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md)。
+自有源码采用 [Apache-2.0](LICENSE)。华为运行时资产和派生兼容数据的范围见
+[NOTICE](NOTICE)，其他组件见 [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md)。
+源码仓库不包含华为运行时载荷；Release APK 含本地提供的载荷，其再分发条款与源码许可不同。
 
 非官方项目，与华为无隶属或背书关系。

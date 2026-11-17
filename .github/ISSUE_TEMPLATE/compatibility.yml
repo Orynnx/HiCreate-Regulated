@@ -1,0 +1,60 @@
+name: 设备兼容性 / Device compatibility
+description: 分享你实际测试过的设备与功能结果 / Share real device test results.
+title: "[Compatibility] "
+body:
+  - type: markdown
+    attributes:
+      value: |
+        请按实际操作填写正常、异常或未测；进入首页不代表所有功能都通过。
+        Mark each workflow as works, fails or not tested. Reaching the home screen is only one check.
+  - type: input
+    id: device
+    attributes:
+      label: 设备与系统 / Device and OS
+      placeholder: 品牌、完整型号、Android 与系统版本 / Model, Android and ROM version
+    validations:
+      required: true
+  - type: textarea
+    id: versions
+    attributes:
+      label: 版本与环境 / Versions and setup
+      value: |
+        模块 / Module:
+        天生会画 / GoPaint:
+        LSPosed / API:
+        Root / Zygisk:
+        HMS Core:
+    validations:
+      required: true
+  - type: dropdown
+    id: overall
+    attributes:
+      label: 总体结果 / Overall result
+      options:
+        - 已完成下方所列测试 / Completed the checks described below
+        - 可启动，部分功能异常 / Starts with some feature failures
+        - 启动失败 / Cannot reach the home screen
+        - 仅完成安装 / Installation only
+    validations:
+      required: true
+  - type: textarea
+    id: results
+    attributes:
+      label: 逐项结果 / Feature results
+      description: 将“未测”改为实际结果，并描述异常 / Replace not tested with your observed result and describe failures.
+      value: |
+        启动 / Startup: 未测 / Not tested
+        绘画与撤销 / Drawing and undo: 未测 / Not tested
+        笔刷与图层 / Brushes and layers: 未测 / Not tested
+        保存与重新打开 / Save and reopen: 未测 / Not tested
+        导入导出 / Import and export: 未测 / Not tested
+        作品管理 / Artwork management: 未测 / Not tested
+        云端素材 / Online materials: 未测 / Not tested
+        状态页外观 / Status-page appearance: 未测 / Not tested
+    validations:
+      required: true
+  - type: textarea
+    id: evidence
+    attributes:
+      label: 截图与说明 / Screenshots and notes
+      description: 可补充测试作品截图和操作步骤，移除无关私人信息 / Optional test screenshots and steps, with unrelated private data removed.

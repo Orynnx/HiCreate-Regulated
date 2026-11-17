@@ -1,0 +1,50 @@
+name: 问题反馈 / Bug report
+description: 报告安装、启动或使用中的具体问题 / Report a reproducible problem.
+title: "[Bug] "
+body:
+  - type: markdown
+    attributes:
+      value: |
+        感谢反馈。模块本身不生成日志或报告，请提供具体操作与系统提示。
+        Thanks for reporting. The module does not generate logs or reports; describe the steps and exact error.
+  - type: input
+    id: device
+    attributes:
+      label: 设备与系统 / Device and OS
+      placeholder: 品牌、完整型号、Android 与系统版本 / Model, Android and ROM version
+    validations:
+      required: true
+  - type: textarea
+    id: versions
+    attributes:
+      label: 版本与环境 / Versions and setup
+      value: |
+        模块 / Module:
+        天生会画 / GoPaint:
+        LSPosed / API:
+        Root / Zygisk:
+        已启用的作用域 / Enabled scopes:
+    validations:
+      required: true
+  - type: textarea
+    id: behavior
+    attributes:
+      label: 问题现象 / What happened?
+      description: 写明实际结果、预期结果和完整错误提示 / Actual result, expected result and exact error.
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: 复现步骤 / Steps to reproduce
+      placeholder: |
+        1.
+        2.
+        3.
+    validations:
+      required: true
+  - type: textarea
+    id: evidence
+    attributes:
+      label: 补充信息 / Additional evidence
+      description: 可附截图或已有系统崩溃信息；先移除无关私人内容 / Optional screenshots or existing system crash information, with unrelated private data removed.

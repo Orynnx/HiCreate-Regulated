@@ -1,0 +1,5 @@
+blank_issues_enabled: true
+contact_links:
+  - name: 安装指南 / Installation guide
+    url: https://github.com/Orynnx/HiCreate-Regulated/blob/main/docs/INSTALL.md
+    about: 安装、作用域和常见问题 / Installation, scope setup and troubleshooting.
