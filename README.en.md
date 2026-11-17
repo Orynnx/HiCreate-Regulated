@@ -1,7 +1,8 @@
-![HiCreate Regulated — GoPaint on more Android devices](docs/images/cover.jpg)
+![GoPaint Compatibility Module / 天生会画兼容模块 — non-Huawei Android devices](docs/images/cover.jpg)
 
-<h1 align="center">Huawei GoPaint for non-Huawei Android</h1>
-<p align="center">GoPaint on more Android devices.</p>
+<h1 align="center">GoPaint Compatibility Module</h1>
+<p align="center"><strong>天生会画兼容模块</strong></p>
+<p align="center">Huawei GoPaint on non-Huawei Android devices.<br />让更多非华为 Android 设备用上天生会画。</p>
 
 <p align="center">
   <a href="https://github.com/Orynnx/HiCreate-Regulated/releases/latest"><img src="docs/images/download-en.svg" width="224" height="48" alt="Download module APK" /></a>
@@ -19,7 +20,7 @@
   <img src="https://img.shields.io/badge/License-Apache%202.0-a64b2a?style=flat-square" alt="Apache-2.0 source license" />
 </p>
 
-HiCreate Regulated provides runtime compatibility for the original **Huawei GoPaint
+This LSPosed module provides runtime compatibility for the original **Huawei GoPaint
 (天生会画 / HiCreate)** app on non-Huawei Android devices. Install a separate
 LSPosed module while keeping the original app APK.
 
