@@ -35,6 +35,7 @@ public final class LegacyHooks {
     private static android.content.res.Resources HW_RES;
     private static android.content.res.Resources HW_BASE;
     private static boolean hwTried;
+    private static final ThreadLocal<Boolean> IN_HW_VALUE = new ThreadLocal<>();
 
     /** Locate the target's per-user code-cache directory without assuming user 0. */
     private static java.io.File hwextFile() {
@@ -157,12 +158,26 @@ public final class LegacyHooks {
         if (tv == null) return false;
         android.content.res.Resources hw = hwResources(base != null ? base : HW_BASE);
         if (hw == null) return false;
+        // HW_RES is also covered by the Resources/ResourcesImpl hooks. Let a
+        // missing id in that package fail normally instead of retrying itself.
+        IN_HW_VALUE.set(Boolean.TRUE);
         try {
             hw.getValue(id, tv, resolveRefs);
             return true;
         } catch (Throwable t) {
             return false;
+        } finally {
+            IN_HW_VALUE.remove();
         }
+    }
+
+    /** Only Huawei framework resource ids belong to this compatibility path. */
+    private static boolean isHuaweiValueRequest(Object[] args) {
+        return !Boolean.TRUE.equals(IN_HW_VALUE.get())
+                && args != null && args.length > 1
+                && args[0] instanceof Integer
+                && (((Integer) args[0]) >>> 24) == 0x02
+                && args[1] instanceof android.util.TypedValue;
     }
 
     /** Only these exact names are answered from the module dex (avoid recursion). */
@@ -210,7 +225,6 @@ public final class LegacyHooks {
         hookResourcesImplGetValue();
         spoofBuildFields();
         hookSystemProperties();
-        hookExit();
         hookDeviceSupport(ctx.classLoader());
         hookHomeActivity(ctx.classLoader());
         hookProductSupport(ctx.classLoader());
@@ -1303,7 +1317,7 @@ public final class LegacyHooks {
         });
     }
 
-    /** SplashActivity bails out with "not support this device" on non-Huawei builds. */
+    /** Huawei identity only. Keep actual hardware/SoC for OEM and GPU code. */
     private void spoofBuildFields() {
         String model = DEVICE_MODEL;
         String[][] fields = {
@@ -1311,11 +1325,7 @@ public final class LegacyHooks {
                 {"BRAND", "HUAWEI"},
                 {"MODEL", model},
                 {"DEVICE", "HWDBY"},
-                {"PRODUCT", model},
-                {"HARDWARE", "kirin990"},
-                {"BOARD", "KIRIN990"},
-                {"SOC_MANUFACTURER", "HiSilicon"},
-                {"SOC_MODEL", "Kirin 990"}
+                {"PRODUCT", model}
         };
         for (String[] pair : fields) {
             try {
@@ -1397,7 +1407,7 @@ public final class LegacyHooks {
                     new XC_MethodHook() {
                         @Override
                         protected void beforeHookedMethod(MethodHookParam p) {
-                            if (p.method == null) return;
+                            if (p.method == null || !isHuaweiValueRequest(p.args)) return;
                             try {
                                 p.setResult(XposedBridge.invokeOriginalMethod(p.method, p.thisObject, p.args));
                             } catch (Throwable t) {
@@ -1408,12 +1418,14 @@ public final class LegacyHooks {
                                     android.util.TypedValue tv = (android.util.TypedValue) p.args[1];
                                     if (fillFromHuawei((android.content.res.Resources) p.thisObject,
                                             ((Integer) idObj).intValue(), tv, true)) {
+                                        p.setResult(null);
                                         return;
                                     }
                                     tv.type = android.util.TypedValue.TYPE_NULL;
                                     tv.data = 0;
                                     tv.resourceId = 0;
                                     tv.string = null;
+                                    p.setResult(null);
                                 }
                             }
                         }
@@ -1425,10 +1437,7 @@ public final class LegacyHooks {
         hookValueFallback(android.content.res.Resources.class, "getResourceEntryName", "unknown");
     }
 
-    /**
-     * Latest's global standard-theme hook: every Activity gets the NoActionBar
-     * theme before onCreate, and its ActionBar is hidden after onResume.
-     */
+    /** Use the app's bundled AppCompat theme instead of an OEM-dependent device theme. */
     private static void hookStandardActivitiesTheme(ClassLoader cl) {
         try {
             XposedBridge.hookAllMethods(android.app.Activity.class, "onCreate",
@@ -1437,8 +1446,11 @@ public final class LegacyHooks {
                         protected void beforeHookedMethod(MethodHookParam p) {
                             if (!(p.thisObject instanceof android.app.Activity)) return;
                             android.app.Activity activity = (android.app.Activity) p.thisObject;
+                            if (!TARGET.equals(activity.getPackageName())) return;
                             try {
-                                activity.setTheme(android.R.style.Theme_DeviceDefault_NoActionBar);
+                                int theme = activity.getResources().getIdentifier(
+                                        "Theme.AppCompat.NoActionBar", "style", TARGET);
+                                if (theme != 0) activity.setTheme(theme);
                             } catch (Throwable t) {
                             }
                         }
@@ -1677,8 +1689,7 @@ public final class LegacyHooks {
             XposedBridge.hookAllMethods(impl, "getValue", new XC_MethodHook() {
                 @Override
                 protected void beforeHookedMethod(MethodHookParam p) {
-                    if (p.method == null || p.args == null || p.args.length < 2
-                            || !(p.args[1] instanceof android.util.TypedValue)) {
+                    if (p.method == null || !isHuaweiValueRequest(p.args)) {
                         return;
                     }
                     try {
@@ -1687,12 +1698,14 @@ public final class LegacyHooks {
                         android.util.TypedValue tv = (android.util.TypedValue) p.args[1];
                         if (p.args[0] instanceof Integer
                                 && fillFromHuawei(HW_BASE, ((Integer) p.args[0]).intValue(), tv, true)) {
+                            p.setResult(null);
                             return;
                         }
                         tv.type = android.util.TypedValue.TYPE_NULL;
                         tv.data = 0;
                         tv.resourceId = 0;
                         tv.string = null;
+                        p.setResult(null);
                     }
                 }
             });
@@ -1959,23 +1972,6 @@ public final class LegacyHooks {
         }
     }
 
-    /** The app calls exit() between splash stages; keep the process alive for testing. */
-    private static void hookExit() {
-        XC_MethodHook swallow = new XC_MethodHook() {
-            @Override
-            protected void beforeHookedMethod(MethodHookParam param) {
-                param.setResult(null);
-            }
-        };
-        try {
-            XposedBridge.hookAllMethods(java.lang.System.class, "exit", swallow);
-            XposedBridge.hookAllMethods(java.lang.Runtime.class, "exit", swallow);
-            XposedBridge.hookAllMethods(java.lang.Runtime.class, "halt", swallow);
-            XposedBridge.hookAllMethods(android.os.Process.class, "killProcess", swallow);
-        } catch (Throwable t) {
-        }
-    }
-
     /**
      * SplashActivity.onCreate calls M()Z; when it returns false the app logs
      * "SplashActivity - not support this device." and finishes.
@@ -2006,11 +2002,6 @@ public final class LegacyHooks {
         if ("ro.product.name".equals(key)) return DEVICE_MODEL;
         if ("ro.build.characteristics".equals(key)) return "tablet";
         if ("ro.config.hw_emui_version".equals(key)) return "14.2.0";
-        if ("ro.board.platform".equals(key)) return "kirin990";
-        if ("ro.hardware.chipname".equals(key)) return "KIRIN990";
-        if ("ro.config.chipname".equals(key)) return "KIRIN990";
-        if ("ro.product.board".equals(key)) return "KIRIN990";
-        if ("ro.hardware".equals(key)) return "kirin990";
         return null;
     }
 

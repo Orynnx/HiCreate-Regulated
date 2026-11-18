@@ -25,7 +25,7 @@ Android 设备上的运行时兼容适配。安装独立 LSPosed 模块，保留
 
 > **开始前**：需要 Root、LSPosed API 102 和 Zygisk/同等注入环境；
 > 目标应用须为原版 `com.huawei.hicreate` **12.4.2.330**。
-> 当前模块版本为 **1.0.0-alpha-release**，已记录测试环境与待验证范围见[兼容性表](docs/COMPATIBILITY.md)。
+> 当前模块版本为 **1.0.2-alpha-release**，已记录测试环境与待验证范围见[兼容性表](docs/COMPATIBILITY.md)。
 
 ## 它带来什么
 

@@ -25,6 +25,9 @@ public final class XposedBridge {
 
     public static void init(HookContext hookContext) {
         context = hookContext;
+        // Resolve the parameter carrier before installing any ClassLoader hook.
+        // Keep rules prevent R8 from merging it with unrelated lazy UI classes.
+        new MethodHookParam(null, null, new Object[0]);
     }
 
     public static HookContext context() {
@@ -80,12 +83,18 @@ public final class XposedBridge {
         }
     }
 
-    static void setCurrentChain(XposedInterface.Chain chain) {
+    static XposedInterface.Chain setCurrentChain(XposedInterface.Chain chain) {
+        XposedInterface.Chain previous = CURRENT_CHAIN.get();
         CURRENT_CHAIN.set(chain);
+        return previous;
     }
 
-    static void clearCurrentChain() {
-        CURRENT_CHAIN.remove();
+    static void restoreCurrentChain(XposedInterface.Chain previous) {
+        if (previous == null) {
+            CURRENT_CHAIN.remove();
+        } else {
+            CURRENT_CHAIN.set(previous);
+        }
     }
 
     private static List<Method> methodsNamed(Class<?> cls, String name) {

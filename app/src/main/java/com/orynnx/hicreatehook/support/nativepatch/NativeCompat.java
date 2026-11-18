@@ -45,9 +45,11 @@ public final class NativeCompat {
         }
     }
 
+    // LSPosed grants hidden-API access in its scoped target process; this is
+    // deliberately not called by the standalone module status Activity.
+    @android.annotation.SuppressLint("BlockedPrivateApi")
     public static void install(Context context, ClassLoader targetLoader) {
         if (installed) return;
-        installed = true;
         try {
             File stubDex = findStubDex(context);
             if (stubDex == null) {
@@ -61,11 +63,19 @@ public final class NativeCompat {
             Class<?> loaderClass = loader.loadClass(
                     "com.orynnx.hicreatehook.loader.TargetNativeLoader");
             Method load = loaderClass.getMethod("load", String.class);
-            XposedBridge.hookAllMethods(System.class, "loadLibrary", new XC_MethodHook() {
+            // System.loadLibrary is @CallerSensitive. Hooking it changes the
+            // caller seen by Reflection.getCallerClass(), even for libraries
+            // that our callback passes through. Intercept AFTER Android has
+            // resolved that caller, retaining OEM/system linker namespaces.
+            Method entry = Runtime.class.getDeclaredMethod(
+                    "loadLibrary0", Class.class, String.class);
+            XposedBridge.context().hook(entry, new XC_MethodHook() {
                 @Override
                 protected void beforeHookedMethod(MethodHookParam param) {
-                    if (param.args == null || param.args.length == 0
-                            || !"nativelib".equals(param.args[0])) {
+                    if (param.args == null || param.args.length != 2
+                            || !"nativelib".equals(param.args[1])
+                            || !(param.args[0] instanceof Class)
+                            || !isTargetLoader(((Class<?>) param.args[0]).getClassLoader(), targetLoader)) {
                         return;
                     }
                     synchronized (LOCK) {
@@ -82,8 +92,17 @@ public final class NativeCompat {
                     }
                 }
             });
+            installed = true;
         } catch (Throwable ignored) {
         }
+    }
+
+    private static boolean isTargetLoader(ClassLoader caller, ClassLoader target) {
+        if (target == null) return false;
+        for (ClassLoader current = caller; current != null; current = current.getParent()) {
+            if (current == target) return true;
+        }
+        return false;
     }
 
     private static File findStubDex(Context context) {

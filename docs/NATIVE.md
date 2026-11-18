@@ -5,7 +5,12 @@
 APK，也不写 `/data/app`。
 
 模块在目标进程内创建一份应用私有副本，校验、打补丁，然后把
-`System.loadLibrary("nativelib")` 重定向到副本。
+`System.loadLibrary("nativelib")` 的请求在 Runtime 层重定向到副本。
+
+不能直接 Hook 带有 `@CallerSensitive` 的 `System.loadLibrary`：即使回调放行，
+Hook 桥也可能改变 Android 识别的调用方和 linker namespace。当前仅 Hook
+`Runtime.loadLibrary0(Class, String)`，且要求库名为 `nativelib`、调用方属于目标
+ClassLoader 或其子加载器。厂商库和其他库保留原始 caller，不绕过 MIUI provider。
 
 > 这仍然要求模块运行在 LSPosed 中；常规 LSPosed 需要 root 和 Zygisk/同等
 > 注入环境。原生补丁本身不额外申请 root 权限。
@@ -16,7 +21,7 @@ APK，也不写 `/data/app`。
 HiCreateApplication.onCreate
   └─ StubDex 注入完成
       └─ NativeCompat.install(context, appLoader)
-          └─ Hook System.loadLibrary("nativelib")
+          └─ Hook Runtime.loadLibrary0(Class, String)（调用方已解析）
               ├─ files/native 缓存有效 -> 加载缓存副本
               └─ 缓存失效
                   ├─ 从目标 APK 复制 16 个 ARM64 库到 files/native.tmp

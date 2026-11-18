@@ -86,6 +86,6 @@ HICREATE_RELEASE_KEY_PASSWORD
 ## 版本
 
 ```text
-versionName = 1.0.0-alpha-release
-versionCode = 10000
+versionName = 1.0.2-alpha-release
+versionCode = 10002
 ```

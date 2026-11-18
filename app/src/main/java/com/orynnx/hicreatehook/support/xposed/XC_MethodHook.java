@@ -21,7 +21,10 @@ public abstract class XC_MethodHook implements XposedInterface.Hooker {
                 method,
                 chain.getThisObject(),
                 chain.getArgs().toArray());
-        XposedBridge.setCurrentChain(chain);
+        // An original method can invoke another hooked method (for example,
+        // Resources.getValue -> ResourcesImpl.getValue). Restore the enclosing
+        // chain when it returns, including exceptional exits.
+        XposedInterface.Chain previous = XposedBridge.setCurrentChain(chain);
         try {
             try {
                 beforeHookedMethod(param);
@@ -45,7 +48,7 @@ public abstract class XC_MethodHook implements XposedInterface.Hooker {
             }
             return param.result;
         } finally {
-            XposedBridge.clearCurrentChain();
+            XposedBridge.restoreCurrentChain(previous);
         }
     }
 }

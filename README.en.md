@@ -26,7 +26,7 @@ LSPosed module while keeping the original app APK.
 
 > **Before you start:** Root, LSPosed API 102 and Zygisk or an equivalent injection
 > environment are required. Use the stock `com.huawei.hicreate` **12.4.2.330** APK.
-> Current module: **1.0.0-alpha-release**.
+> Current module: **1.0.2-alpha-release**.
 > See the [compatibility record](docs/COMPATIBILITY.md#english) for the tested environment and remaining gaps.
 
 ## What it brings

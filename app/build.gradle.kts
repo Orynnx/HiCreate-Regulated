@@ -35,8 +35,8 @@ android {
         applicationId = "com.orynnx.hicreatehook"
         minSdk = 31
         targetSdk = 36
-        versionCode = 10000
-        versionName = "1.0.0-alpha-release"
+        versionCode = 10002
+        versionName = "1.0.2-alpha-release"
     }
 
     compileOptions {
@@ -95,6 +95,7 @@ dependencies {
     implementation(libs.glasmio.ui)
     implementation(libs.activity.ktx)
     testImplementation(libs.junit)
+    testImplementation(libs.libxposed.api)
 }
 
 kotlin {
